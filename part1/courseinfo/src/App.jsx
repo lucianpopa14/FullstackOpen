@@ -22,9 +22,6 @@ const App = () => {
       <Header course={course.name} />
       <Content parts={course.parts} />
       <Total parts={course.parts} />
-      <Header course={course.name} />
-      <Content parts={course.parts} />
-      <Total parts={course.parts} />
     </div>
   )
 }
@@ -38,15 +35,18 @@ const Header = ({ course }) => {
 }
 
 const Content = ({ parts }) => {
-const Content = ({ parts }) => {
   return (
     <div>
-      {parts.map((part, index) => (
-        <p key={index}> 
-        {part.name} {part.exercises} 
-        </p>
-      ))}
+      <Part part={parts[0]} />
+      <Part part={parts[1]} />
+      <Part part={parts[2]} />
     </div>
+  )
+}
+
+const Part = ({ part }) => {
+  return (
+    <p>{part.name} has {part.exercises} exercises</p>
   )
 }
 
