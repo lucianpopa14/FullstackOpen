@@ -1,16 +1,19 @@
-/* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react';
 import Filter from './components/Filter';
 import PersonForm from './components/PersonForm';
 import Persons from './components/Persons';
 import axios from 'axios';
 import phonebookService from './services/phonebook';
+import Notification from './components/Notification';
+import Error from './components/Error';
 
 const App = () => {
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState('');
   const [newNumber, setNewNumber] = useState('');
   const [filter, setFilter] = useState('');
+  const [successNotification, setSuccessNotification] = useState(null);
+  const [errorMessage, setErrorMessage] = useState(null);
 
   useEffect(() => {
     axios.get('http://localhost:3001/persons').then((response) => {
@@ -29,6 +32,20 @@ const App = () => {
 
   const handleFilterChange = (event) => {
     setFilter(event.target.value);
+  };
+
+  const showNotification = (message) => {
+    setSuccessNotification(message);
+    setTimeout(() => {
+      setSuccessNotification(null);
+    }, 3000);
+  };
+
+  const showError = (message) => {
+    setErrorMessage(message);
+    setTimeout(() => {
+      setErrorMessage(null);
+    }, 5000);
   };
 
   const addEntry = (event) => {
@@ -52,9 +69,11 @@ const App = () => {
             ));
             setNewName('');
             setNewNumber('');
+            showNotification(`Updated ${newName}`);
           })
           .catch(error => {
             console.error('Error updating entry:', error);
+            showError('Error updating entry');
           });
       }
     } else {
@@ -63,9 +82,11 @@ const App = () => {
           setPersons(persons.concat(returnedEntry));
           setNewName('');
           setNewNumber('');
+          showNotification(`Added ${newName}`);
         })
         .catch(error => {
           console.error('Error creating entry:', error);
+          showError('Error creating entry');
         });
     }
   };
@@ -79,6 +100,7 @@ const App = () => {
           console.log(`${name} has been deleted`);
         })
         .catch((error) => {
+          showError(`Information of ${name} has already been removed from server`);
           console.error('Error deleting entry:', error);
         });
     }
@@ -91,6 +113,8 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Error error={errorMessage} />
+      <Notification message={successNotification} />
       <Filter filter={filter} handleFilterChange={handleFilterChange} />
       <h3>Add a new</h3>
       <PersonForm
