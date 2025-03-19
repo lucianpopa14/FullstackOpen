@@ -1,6 +1,21 @@
 const express = require('express')
 const app = express()
+const morgan = require('morgan')
+const cors = require('cors')
+
 app.use(express.json())
+app.use(morgan('tiny'))
+app.use(cors())
+
+// not a good practice to show data in console
+// morgan.token('body', (req) => {
+//     if (req.method === 'POST' && req.body && req.body.name && req.body.number) {
+//         return `{name: ${req.body.name}, number: ${req.body.number}}`;
+//     }
+//     return '';
+// });
+
+// app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'));
 
 let persons = [
     {

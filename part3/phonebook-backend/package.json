@@ -9,5 +9,9 @@
   },
   "author": "Lucian Popa",
   "license": "MIT",
-  "description": ""
+  "description": "",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "morgan": "^1.10.0"
+  }
 }

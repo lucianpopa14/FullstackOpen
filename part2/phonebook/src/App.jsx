@@ -16,7 +16,7 @@ const App = () => {
   const [errorMessage, setErrorMessage] = useState(null);
 
   useEffect(() => {
-    axios.get('http://localhost:3001/persons').then((response) => {
+    axios.get('http://localhost:3001/api/persons').then((response) => {
       console.log('promise fulfilled');
       setPersons(response.data);
     });
