@@ -6,6 +6,7 @@ const cors = require('cors')
 app.use(express.json())
 app.use(morgan('tiny'))
 app.use(cors())
+app.use(express.static('dist'))
 
 // not a good practice to show data in console
 // morgan.token('body', (req) => {
