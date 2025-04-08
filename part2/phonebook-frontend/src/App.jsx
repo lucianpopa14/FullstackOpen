@@ -16,7 +16,7 @@ const App = () => {
   const [errorMessage, setErrorMessage] = useState(null);
 
   useEffect(() => {
-    axios.get('http://localhost:3001/api/persons').then((response) => {
+    axios.get('http://fullstackopen-k6l1.onrender.com/api/persons').then((response) => {
       console.log('promise fulfilled');
       setPersons(response.data);
     });
