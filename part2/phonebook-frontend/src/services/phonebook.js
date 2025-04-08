@@ -1,5 +1,5 @@
 import axios from 'axios'
-const baseUrl = '/api/persons'
+const baseUrl = 'https://fullstackopen-k6l1.onrender.com/api/persons';
 
 const getAll = () => {
     console.log('Requesting data from:', baseUrl); // Log the URL being requested
