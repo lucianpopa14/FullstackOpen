@@ -57,7 +57,9 @@ const App = () => {
 
     const existingPerson = persons.find(person => person.name === newName);
 
-    if (existingPerson) {
+    if (newName.length < 3) {
+      showError('Name is too short');
+    } else if (existingPerson) {
       const confirmUpdate = window.confirm(
         `${newName} is already added to phonebook, replace the old number with a new one?`
       );
@@ -89,7 +91,7 @@ const App = () => {
           showError('Error creating entry');
         });
     }
-  };
+  }
 
   const deleteEntry = (idToDelete, name) => {
     const confirmDelete = window.confirm(`Delete ${name} ?`);
