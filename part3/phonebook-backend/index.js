@@ -10,10 +10,18 @@ app.use(morgan('tiny'));
 app.use(cors());
 app.use(express.static('dist'));
 
-app.get('/api/persons', (request, response, next) => {
-    Person.find({}).then(persons => {
+const requestLogger = (request, response, next) => {
+    console.log('Method:', request.method)
+    console.log('Path:  ', request.path)
+    console.log('Body:  ', request.body)
+    console.log('---')
+    next()
+}
+
+app.get('/api/persons', (request, response) => {
+    Person.find({}).then((persons) => {
         response.json(persons);
-    }).catch(error => next(error));
+    })
 });
 
 app.get('/api/persons/:id', (request, response, next) => {
@@ -102,6 +110,7 @@ const errorHandler = (error, request, response, next) => {
 };
 
 app.use(errorHandler);
+app.use(requestLogger)
 
 const PORT = process.env.PORT;
 app.listen(PORT, () => {
