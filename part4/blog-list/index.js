@@ -12,7 +12,7 @@ const blogSchema = mongoose.Schema({
 
 const Blog = mongoose.model('Blog', blogSchema)
 
-const mongoUrl = 'mongodb://localhost/bloglist'
+const mongoUrl = 'mongodb+srv://lucianpopa98:mongopass@cluster0.3u6oug7.mongodb.net/blog-list?retryWrites=true&w=majority&appName=Cluster0'
 mongoose.connect(mongoUrl)
 
 app.use(express.json())
