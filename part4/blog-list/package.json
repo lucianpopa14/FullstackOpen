@@ -5,7 +5,7 @@
   "scripts": {
     "start": "node index.js",
     "dev": "node --watch index.js",
-    "test": ""
+    "test": "node --test"
   },
   "author": "Lucian Popa",
   "license": "ISC",
