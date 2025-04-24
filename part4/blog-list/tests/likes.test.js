@@ -2,7 +2,6 @@ const { test, describe } = require('node:test');
 const assert = require('node:assert');
 const { totalLikes } = require('../utils/listHelper');
 
-describe('total likes', () => {
     const listWithOneBlog = [
       {
         _id: '5a422aa71b54a676234d17f8',
@@ -18,4 +17,3 @@ describe('total likes', () => {
       const result = totalLikes(listWithOneBlog)
       assert.strictEqual(result, 5)
     })
-  })

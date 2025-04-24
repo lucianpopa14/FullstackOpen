@@ -35,6 +35,11 @@ test('blogs are returned as json', async () => {
         .expect('Content-Type', /application\/json/)
 })
 
+test('all blogs are returned', async () => {
+    const response = await api.get('/api/blogs')
+    assert.strictEqual(response.body.length, initialBlogs.length)
+})
+
 test('there are 2 blogs', async () => {
     const response = await api.get('/api/blogs')
     assert.strictEqual(response.body.length, initialBlogs.length)
@@ -47,17 +52,56 @@ test('blogs entries have an id field and not _id', async () => {
     assert.strictEqual('_id' in blog, false)
 })
 
-test('post request creates new blog post', async () => {
+test('a valid blog can be added', async () => {
     const newBlog = {
-        "title": "test blog",
-        "author": "tesy test",
-        "url": "https://test.com/",
-        "likes": 4
+        title: "Test Blog 3",
+        author: "Tester Three",
+        url: "http://test3.com",
+        likes: 3
     }
-    const request = await api.post('/api/blogs').send(newBlog).expect(201)
+
+    await api
+        .post('/api/blogs')
+        .send(newBlog)
+        .expect(201)
+        .expect('Content-Type', /application\/json/)
+
     const response = await api.get('/api/blogs')
-    assert.strictEqual(request.body.title, newBlog.title)
-    assert.strictEqual(response.body.length, 3)
+    assert.strictEqual(response.body.length, initialBlogs.length + 1)
+})
+
+test('a blog can be deleted', async () => {
+    const blogsAtStart = await api.get('/api/blogs')
+    const blogToDelete = blogsAtStart.body[0]
+
+    await api
+        .delete(`/api/blogs/${blogToDelete.id}`)
+        .expect(204)
+
+    const blogsAtEnd = await api.get('/api/blogs')
+    assert.strictEqual(blogsAtEnd.body.length, initialBlogs.length - 1)
+})
+
+test('a blog can be updated', async () => {
+    const blogsAtStart = await api.get('/api/blogs')
+    const blogToUpdate = blogsAtStart.body[0]
+    
+    const updatedBlog = {
+        title: blogToUpdate.title,
+        author: blogToUpdate.author,
+        url: blogToUpdate.url,
+        likes: blogToUpdate.likes + 1
+    }
+
+    await api
+        .put(`/api/blogs/${blogToUpdate.id}`)
+        .send(updatedBlog)
+        .expect(200)
+        .expect('Content-Type', /application\/json/)
+
+    const blogsAtEnd = await api.get('/api/blogs')
+    const updatedBlogInDb = blogsAtEnd.body.find(b => b.id === blogToUpdate.id)
+    assert.strictEqual(updatedBlogInDb.likes, blogToUpdate.likes + 1)
 })
 
 after(async () => {
