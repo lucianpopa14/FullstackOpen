@@ -6,7 +6,7 @@ const blogSchema = new mongoose.Schema({
     url: { type: String, required: true },
     likes: { type: Number, default: 0 },
     user: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId, //this allows to use populate method
         ref: 'User'
       }
 });
