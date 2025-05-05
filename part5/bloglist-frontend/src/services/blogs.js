@@ -6,4 +6,8 @@ const getAll = async () => {
   return response.data
 }
 
+const newBlog = async()=>{
+
+}
+
 export default { getAll }

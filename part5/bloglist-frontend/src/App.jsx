@@ -81,6 +81,20 @@ const App = () => {
       )}
     </div>
   )
+// TODO add new blog ex 5.3
+  const addNewBlogForm = () => {
+    <form onSubmit={handleAddNewBlog}>
+      <div>
+        title
+        <input
+          type="text"
+          value={title}
+          name="Title"
+        />
+      </div>
+    </form>
+  }
+
   return (
     <div>
       <h2>blogs</h2>
