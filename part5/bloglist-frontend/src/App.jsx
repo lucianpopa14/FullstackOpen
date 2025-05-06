@@ -2,23 +2,30 @@ import { useState, useEffect } from 'react'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
+import LoginForm from './components/LoginForm'
+import BlogForm from './components/BlogForm'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
-  const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
-  const [url, setUrl] = useState('')
+  const [formData, setFormData] = useState({
+    username: '',
+    password: '',
+    title: '',
+    author: '',
+    url: ''
+  })
+  const [errorMessage, setErrorMessage] = useState(null)
 
   useEffect(() => {
     const fetchBlogs = async () => {
       const blogs = await blogService.getAll()
       setBlogs(blogs)
     }
-    fetchBlogs()
-  }, [])
+    if (user) {
+      fetchBlogs()
+    }
+  }, [user])
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedUser')
@@ -28,113 +35,97 @@ const App = () => {
     }
   }, [])
 
+  const handleInputChange = (e) => {
+    const { name, value } = e.target
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }))
+  }
+
   const handleLogin = async (event) => {
     event.preventDefault()
     try {
       const user = await loginService.login({
-        username, password,
+        username: formData.username,
+        password: formData.password,
       })
       window.localStorage.setItem('loggedUser', JSON.stringify(user))
       setUser(user)
-      setUsername('')
-      setPassword('')
+      setFormData(prev => ({
+        ...prev,
+        username: '',
+        password: ''
+      }))
     } catch (exception) {
       setErrorMessage('Wrong credentials')
       setTimeout(() => {
         setErrorMessage(null)
       }, 5000)
     }
-    console.log('logged in with', username, password)
   }
-
-  const loginForm = () => (
-    <form onSubmit={handleLogin}>
-      <h2>login</h2>
-      <div>
-        username
-        <input
-          type="text"
-          value={username}
-          name="Username"
-          onChange={({ target }) => setUsername(target.value)}
-        />
-      </div>
-      <div>
-        password
-        <input
-          type="password"
-          value={password}
-          name="Password"
-          onChange={({ target }) => setPassword(target.value)}
-        />
-      </div>
-      <button type="submit">login</button>
-    </form>
-  )
-  const handleLogout = () => {
-    window.localStorage.removeItem('loggedUser')
-    setUser(null)
-  }
-
-  const blogsForm = () => (
-    <div>
-      <h2>blogs</h2>
-      <p>{user.username} logged in</p>
-      <h2>create new</h2>
-      <form onSubmit={handleBlogSubmit}>
-        <div>
-          title:
-          <input
-            type='text'
-            value={title}
-            onChange={({ target }) => setTitle(target.value)}
-          />
-        </div>
-        <div>
-          author:
-          <input
-            type='text'
-            value={author}
-            onChange={({ target }) => setAuthor(target.value)}
-          />
-        </div>
-        <div>
-          url:
-          <input
-            type="text"
-            value={url}
-            onChange={({ target }) => setUrl(target.value)}
-          />
-        </div>
-        <button type="submit">create</button>
-      </form>
-      {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} />
-      )}
-      <button type="submit" onClick={handleLogout}>logout</button>
-    </div>
-  )
 
   const handleBlogSubmit = async (event) => {
     event.preventDefault()
     try {
       const blogObject = {
-        title, author, url
+        title: formData.title,
+        author: formData.author,
+        url: formData.url
       }
       await blogService.newBlog(blogObject, user.token)
-      setTitle('')
-      setAuthor('')
-      setUrl('')
+      setFormData(prev => ({
+        ...prev,
+        title: '',
+        author: '',
+        url: ''
+      }))
       const updatedBlogs = await blogService.getAll()
       setBlogs(updatedBlogs)
     } catch (ex) {
-      console.log(ex);
+      setErrorMessage('Failed to create blog')
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 5000)
     }
+  }
+
+  const handleLogout = () => {
+    window.localStorage.removeItem('loggedUser')
+    setUser(null)
+  }
+
+  if (!user) {
+    return (
+      <LoginForm
+        username={formData.username}
+        password={formData.password}
+        handleUsername={handleInputChange}
+        handlePassword={handleInputChange}
+        handleSubmit={handleLogin}
+      />
+    )
   }
 
   return (
     <div>
-      {user === null ? loginForm() : blogsForm()}
+      <h2>blogs</h2>
+      <p>{user.username} logged in</p>
+      <button onClick={handleLogout}>logout</button>
+
+      <BlogForm
+        title={formData.title}
+        author={formData.author}
+        url={formData.url}
+        handleTitle={handleInputChange}
+        handleAuthor={handleInputChange}
+        handleUrl={handleInputChange}
+        handleSubmit={handleBlogSubmit}
+      />
+
+      {blogs.map(blog =>
+        <Blog key={blog.id} blog={blog} />
+      )}
     </div>
   )
 }
