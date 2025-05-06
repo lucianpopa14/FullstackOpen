@@ -4,6 +4,7 @@ import blogService from './services/blogs'
 import loginService from './services/login'
 import LoginForm from './components/LoginForm'
 import BlogForm from './components/BlogForm'
+import Notification from './components/Notification'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -16,6 +17,17 @@ const App = () => {
     url: ''
   })
   const [errorMessage, setErrorMessage] = useState(null)
+  const [notification, setNotification] = useState({
+    message: null,
+    type: null
+  })
+
+  const showNotification = (message, type) => {
+    setNotification({ message, type })
+    setTimeout(() => {
+      setNotification({ message: null, type: null })
+    }, 5000)
+  }
 
   useEffect(() => {
     const fetchBlogs = async () => {
@@ -57,11 +69,9 @@ const App = () => {
         username: '',
         password: ''
       }))
+      showNotification(`Welcome ${user.username}!`, 'success')
     } catch (exception) {
-      setErrorMessage('Wrong credentials')
-      setTimeout(() => {
-        setErrorMessage(null)
-      }, 5000)
+      showNotification('Wrong username or password', 'error')
     }
   }
 
@@ -82,11 +92,9 @@ const App = () => {
       }))
       const updatedBlogs = await blogService.getAll()
       setBlogs(updatedBlogs)
+      showNotification(`A new blog ${blogObject.title} by ${blogObject.author} added`, 'success')
     } catch (ex) {
-      setErrorMessage('Failed to create blog')
-      setTimeout(() => {
-        setErrorMessage(null)
-      }, 5000)
+      showNotification('Failed to create blog', 'error')
     }
   }
 
@@ -109,6 +117,7 @@ const App = () => {
 
   return (
     <div>
+      <Notification message={notification.message} type={notification.type} />
       <h2>blogs</h2>
       <p>{user.username} logged in</p>
       <button onClick={handleLogout}>logout</button>
