@@ -8,6 +8,9 @@ const App = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
+  const [title, setTitle] = useState('')
+  const [author, setAuthor] = useState('')
+  const [url, setUrl] = useState('')
 
   useEffect(() => {
     const fetchBlogs = async () => {
@@ -46,6 +49,7 @@ const App = () => {
 
   const loginForm = () => (
     <form onSubmit={handleLogin}>
+      <h2>login</h2>
       <div>
         username
         <input
@@ -74,30 +78,62 @@ const App = () => {
 
   const blogsForm = () => (
     <div>
+      <h2>blogs</h2>
       <p>{user.username} logged in</p>
-      <button type="submit" onClick={handleLogout}>logout</button>
+      <h2>create new</h2>
+      <form onSubmit={handleBlogSubmit}>
+        <div>
+          title:
+          <input
+            type='text'
+            value={title}
+            onChange={({ target }) => setTitle(target.value)}
+          />
+        </div>
+        <div>
+          author:
+          <input
+            type='text'
+            value={author}
+            onChange={({ target }) => setAuthor(target.value)}
+          />
+        </div>
+        <div>
+          url:
+          <input
+            type="text"
+            value={url}
+            onChange={({ target }) => setUrl(target.value)}
+          />
+        </div>
+        <button type="submit">create</button>
+      </form>
       {blogs.map(blog =>
         <Blog key={blog.id} blog={blog} />
       )}
+      <button type="submit" onClick={handleLogout}>logout</button>
     </div>
   )
-// TODO add new blog ex 5.3
-  const addNewBlogForm = () => {
-    <form onSubmit={handleAddNewBlog}>
-      <div>
-        title
-        <input
-          type="text"
-          value={title}
-          name="Title"
-        />
-      </div>
-    </form>
+
+  const handleBlogSubmit = async (event) => {
+    event.preventDefault()
+    try {
+      const blogObject = {
+        title, author, url
+      }
+      await blogService.newBlog(blogObject, user.token)
+      setTitle('')
+      setAuthor('')
+      setUrl('')
+      const updatedBlogs = await blogService.getAll()
+      setBlogs(updatedBlogs)
+    } catch (ex) {
+      console.log(ex);
+    }
   }
 
   return (
     <div>
-      <h2>blogs</h2>
       {user === null ? loginForm() : blogsForm()}
     </div>
   )
