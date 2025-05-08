@@ -1,7 +1,15 @@
-const BlogForm = ({ title, author, url, handleTitle, handleAuthor, handleUrl, handleSubmit }) => {
+const BlogForm = ({ 
+  title, 
+  author, 
+  url, 
+  handleTitle, 
+  handleAuthor, 
+  handleUrl, 
+  handleSubmit 
+}) => {
   return (
     <form onSubmit={handleSubmit}>
-      <h2>create new</h2>
+      <h2>Create new</h2>
       <div>
         title:
         <input
