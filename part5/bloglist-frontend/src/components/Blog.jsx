@@ -1,3 +1,4 @@
+import { useState } from "react"
 const Blog = ({ blog }) => {
   const blogStyle = {
     paddingTop: 10,
@@ -6,11 +7,34 @@ const Blog = ({ blog }) => {
     borderWidth: 1,
     marginBottom: 5
   }
+  const [visible, setVisible] = useState(false)
+  const titleOnlyVisible = { display: visible ? 'none' : '' }
+  const detailsVisible = { display: visible ? '' : 'none' }
+
+  const toggleVisibility = () => {
+    setVisible(!visible)
+  }
+
   return (
-    <div style={blogStyle}>
-      {blog.title} {blog.author}
-      <button>view</button>
-    </div>)
+    <div>
+      <div style={{ ...detailsVisible, ...blogStyle }}>
+        {blog.title} {blog.author}
+        <button onClick={toggleVisibility}>hide</button>
+        <div>
+          {blog.url}
+          <div>
+            likes {blog.likes}
+            <button>like</button>
+          </div>
+          {blog.user.name}
+        </div>
+      </div>
+      <div style={{ ...titleOnlyVisible, ...blogStyle }}>
+        {blog.title} {blog.author}
+        <button onClick={toggleVisibility}>view</button>
+      </div>
+    </div>
+  )
 }
 
 export default Blog

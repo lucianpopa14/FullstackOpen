@@ -122,7 +122,7 @@ const App = () => {
       <h2>Blogs</h2>
       {user.username} logged in
       <button onClick={handleLogout}>logout</button>
-      <Togglable buttonLabel='new blog'>
+      <Togglable buttonLabel='create new blog'>
         <BlogForm
           title={formData.title}
           author={formData.author}
