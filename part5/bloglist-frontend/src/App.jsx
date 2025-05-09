@@ -104,6 +104,11 @@ const App = () => {
     setUser(null)
   }
 
+  const refreshBLog = async () => {
+    const updatedBlogs = await blogService.getAll()
+    setBlogs(updatedBlogs)
+  }
+
   if (!user) {
     return (
       <LoginForm
@@ -134,7 +139,7 @@ const App = () => {
         />
       </Togglable>
       {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} />
+        <Blog key={blog.id} blog={blog} onUpdate={refreshBLog}/>
       )}
     </div>
   )
