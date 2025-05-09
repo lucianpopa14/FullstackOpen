@@ -120,7 +120,7 @@ const App = () => {
     <div>
       <Notification message={notification.message} type={notification.type} />
       <h2>Blogs</h2>
-      <p>{user.username} logged in</p>
+      {user.username} logged in
       <button onClick={handleLogout}>logout</button>
       <Togglable buttonLabel='new blog'>
         <BlogForm
