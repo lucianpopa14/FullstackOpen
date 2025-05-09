@@ -1,8 +1,9 @@
 import { useState } from "react"
 import LikeButton from "./LikeButton"
 import blogService from '../services/blogs'
+import RemoveButton from "./RemoveButton"
 
-const Blog = ({ blog, onUpdate }) => {
+const Blog = ({ blog, user, onUpdate }) => {
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
@@ -30,6 +31,7 @@ const Blog = ({ blog, onUpdate }) => {
             <LikeButton blog={blog} onUpdate={onUpdate} />
           </div>
           {blog.user.name}
+          {blog.user.username === user.username && (<RemoveButton blog={blog} token={user.token} onUpdate={onUpdate} />)}
         </div>
       </div>
       <div style={{ ...titleOnlyVisible, ...blogStyle }}>
