@@ -1,3 +1,5 @@
+import PropTypes from 'prop-types'
+
 const BlogForm = ({ 
   title, 
   author, 
@@ -40,6 +42,16 @@ const BlogForm = ({
       <button type="submit">create</button>
     </form>
   )
+}
+
+BlogForm.propTypes = {
+  title: PropTypes.string.isRequired,
+  author: PropTypes.string.isRequired,
+  url: PropTypes.string.isRequired,
+  handleTitle: PropTypes.func.isRequired,
+  handleAuthor: PropTypes.func.isRequired,
+  handleUrl: PropTypes.func.isRequired,
+  handleSubmit: PropTypes.func.isRequired
 }
 
 export default BlogForm
