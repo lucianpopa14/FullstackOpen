@@ -20,12 +20,12 @@ const Blog = ({ blog, user, onUpdate }) => {
 
   return (
     <div>
-      <div style={{ ...detailsVisible, ...blogStyle }}>
+      <div style={{ ...detailsVisible, ...blogStyle }} className="blog-details">
         {blog.title} {blog.author}
         <button onClick={toggleVisibility}>hide</button>
         <div>
-          {blog.url}
-          <div>
+          <div className="blog-url">{blog.url}</div>
+          <div className="blog-likes">
             likes {blog.likes}
             <LikeButton blog={blog} onUpdate={onUpdate} />
           </div>
@@ -33,7 +33,7 @@ const Blog = ({ blog, user, onUpdate }) => {
           {blog.user.username === user.username && (<RemoveButton blog={blog} token={user.token} onUpdate={onUpdate} />)}
         </div>
       </div>
-      <div style={{ ...titleOnlyVisible, ...blogStyle }}>
+      <div style={{ ...titleOnlyVisible, ...blogStyle }} data-testid="blog-title">
         {blog.title} {blog.author}
         <button onClick={toggleVisibility}>view</button>
       </div>
