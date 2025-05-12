@@ -1,13 +1,13 @@
 import PropTypes from 'prop-types'
 
-const BlogForm = ({ 
-  title, 
-  author, 
-  url, 
-  handleTitle, 
-  handleAuthor, 
-  handleUrl, 
-  handleSubmit 
+const BlogForm = ({
+  title,
+  author,
+  url,
+  handleTitle,
+  handleAuthor,
+  handleUrl,
+  handleSubmit
 }) => {
   return (
     <form onSubmit={handleSubmit}>

@@ -17,7 +17,6 @@ const App = () => {
     author: '',
     url: ''
   })
-  const [errorMessage, setErrorMessage] = useState(null)
   const [notification, setNotification] = useState({
     message: null,
     type: null

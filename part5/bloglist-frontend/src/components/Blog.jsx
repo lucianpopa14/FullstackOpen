@@ -1,7 +1,6 @@
-import { useState } from "react"
-import LikeButton from "./LikeButton"
-import blogService from '../services/blogs'
-import RemoveButton from "./RemoveButton"
+import { useState } from 'react'
+import LikeButton from './LikeButton'
+import RemoveButton from './RemoveButton'
 
 const Blog = ({ blog, user, onUpdate }) => {
   const blogStyle = {
