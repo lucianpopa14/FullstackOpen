@@ -11,14 +11,14 @@ const BlogForm = ({
 }) => {
   return (
     <form onSubmit={handleSubmit}>
-      <h2>Create new</h2>
-      <div>
+      <h2>Create new</h2>      <div>
         title:
         <input
           type='text'
           value={title}
           name='title'
           onChange={handleTitle}
+          placeholder='write title here'
         />
       </div>
       <div>
@@ -28,6 +28,7 @@ const BlogForm = ({
           value={author}
           name='author'
           onChange={handleAuthor}
+          placeholder='write author name here'
         />
       </div>
       <div>
@@ -37,6 +38,7 @@ const BlogForm = ({
           value={url}
           name='url'
           onChange={handleUrl}
+          placeholder='write url here'
         />
       </div>
       <button type="submit">create</button>
