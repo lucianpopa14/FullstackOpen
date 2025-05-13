@@ -45,4 +45,33 @@ describe('Blog app', () => {
       await expect(page.getByText('testuser logged in')).not.toBeVisible()
     })
   })
+
+  describe('When logged in', () => {
+    beforeEach(async ({ page }) => {
+      await page.getByLabel('username').fill('testuser')
+      await page.getByLabel('password').fill('password123')
+      await page.getByRole('button', { name: 'login' }).click()
+      
+      await expect(page.getByText('testuser logged in')).toBeVisible()
+    })
+
+    test('a new blog can be created', async ({ page }) => {
+      await page.getByRole('button', { name: 'create new blog' }).click()
+
+      await page.getByPlaceholderText('write title here').fill('Test Blog Title')
+      await page.getByPlaceholderText('write author name here').fill('Test Author')
+      await page.getByPlaceholderText('write url here').fill('http://testblog.com')
+      await page.getByRole('button', { name: 'create' }).click()
+
+      await expect(page.getByText('A new blog Test Blog Title by Test Author added')).toBeVisible()
+
+      const blogEntry = page.getByText('Test Blog Title Test Author')
+      await expect(blogEntry).toBeVisible()
+
+      await page.getByRole('button', { name: 'view' }).click()
+      await expect(page.getByText('http://testblog.com')).toBeVisible()
+      await expect(page.getByText('likes 0')).toBeVisible()
+      await expect(page.getByText('Test User')).toBeVisible()
+    })
+  })
 })
