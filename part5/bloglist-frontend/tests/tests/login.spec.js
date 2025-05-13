@@ -90,5 +90,23 @@ describe('Blog app', () => {
 
       await expect(page.getByText('likes 1')).toBeVisible()
     })
+
+    test('user can delete their own blog', async ({ page }) => {
+      await page.getByRole('button', { name: 'create new blog' }).click()
+      await page.getByPlaceholderText('write title here').fill('Blog to Delete')
+      await page.getByPlaceholderText('write author name here').fill('Delete Author')
+      await page.getByPlaceholderText('write url here').fill('http://delete-me.com')
+      await page.getByRole('button', { name: 'create' }).click()
+
+      page.on('dialog', async dialog => {
+        expect(dialog.message()).toBe('Remove blog Blog to Delete by Delete Author?')
+        await dialog.accept()
+      })
+
+      await page.getByRole('button', { name: 'view' }).click()
+      await page.getByRole('button', { name: 'remove' }).click()
+
+      await expect(page.getByText('Blog to Delete Delete Author')).not.toBeVisible()
+    })
   })
 })
