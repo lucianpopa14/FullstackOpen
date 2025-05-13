@@ -9,6 +9,11 @@ describe('Blog app', () => {
       name: 'Test User',
       password: 'password123'
     })
+    await request.post('http://localhost:3003/api/users', {
+      username: 'anotheruser',
+      name: 'Another User',
+      password: 'password123'
+    })
     await page.goto('http://localhost:5173')
   })
 
@@ -107,6 +112,33 @@ describe('Blog app', () => {
       await page.getByRole('button', { name: 'remove' }).click()
 
       await expect(page.getByText('Blog to Delete Delete Author')).not.toBeVisible()
+    })
+
+    test('only blog creator can see delete button', async ({ page }) => {
+      // Create a blog as first user
+      await page.getByRole('button', { name: 'create new blog' }).click()
+      await page.getByPlaceholderText('write title here').fill('Creator Only Blog')
+      await page.getByPlaceholderText('write author name here').fill('Test Author')
+      await page.getByPlaceholderText('write url here').fill('http://testblog.com')
+      await page.getByRole('button', { name: 'create' }).click()
+
+      // Verify creator can see delete button
+      await page.getByRole('button', { name: 'view' }).click()
+      const removeButton = page.getByRole('button', { name: 'remove' })
+      await expect(removeButton).toBeVisible()
+
+      // Log out first user
+      await page.getByRole('button', { name: 'logout' }).click()
+
+      // Log in as second user
+      await page.getByLabel('username').fill('anotheruser')
+      await page.getByLabel('password').fill('password123')
+      await page.getByRole('button', { name: 'login' }).click()
+
+      // View the same blog
+      await page.getByRole('button', { name: 'view' }).click()
+      // Verify second user cannot see delete button
+      await expect(page.getByRole('button', { name: 'remove' })).not.toBeVisible()
     })
   })
 })
