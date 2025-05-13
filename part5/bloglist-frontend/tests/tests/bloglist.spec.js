@@ -115,30 +115,75 @@ describe('Blog app', () => {
     })
 
     test('only blog creator can see delete button', async ({ page }) => {
-      // Create a blog as first user
       await page.getByRole('button', { name: 'create new blog' }).click()
       await page.getByPlaceholderText('write title here').fill('Creator Only Blog')
       await page.getByPlaceholderText('write author name here').fill('Test Author')
       await page.getByPlaceholderText('write url here').fill('http://testblog.com')
       await page.getByRole('button', { name: 'create' }).click()
 
-      // Verify creator can see delete button
       await page.getByRole('button', { name: 'view' }).click()
       const removeButton = page.getByRole('button', { name: 'remove' })
       await expect(removeButton).toBeVisible()
 
-      // Log out first user
       await page.getByRole('button', { name: 'logout' }).click()
 
-      // Log in as second user
       await page.getByLabel('username').fill('anotheruser')
       await page.getByLabel('password').fill('password123')
       await page.getByRole('button', { name: 'login' }).click()
 
-      // View the same blog
       await page.getByRole('button', { name: 'view' }).click()
-      // Verify second user cannot see delete button
       await expect(page.getByRole('button', { name: 'remove' })).not.toBeVisible()
+    })
+
+    test('blogs are ordered by likes, most likes first', async ({ page }) => {
+      await page.getByRole('button', { name: 'create new blog' }).click()
+      await page.getByPlaceholderText('write title here').fill('First Blog')
+      await page.getByPlaceholderText('write author name here').fill('First Author')
+      await page.getByPlaceholderText('write url here').fill('http://first.com')
+      await page.getByRole('button', { name: 'create' }).click()
+
+      await page.getByRole('button', { name: 'create new blog' }).click()
+      await page.getByPlaceholderText('write title here').fill('Second Blog')
+      await page.getByPlaceholderText('write author name here').fill('Second Author')
+      await page.getByPlaceholderText('write url here').fill('http://second.com')
+      await page.getByRole('button', { name: 'create' }).click()
+
+      await page.getByRole('button', { name: 'create new blog' }).click()
+      await page.getByPlaceholderText('write title here').fill('Third Blog')
+      await page.getByPlaceholderText('write author name here').fill('Third Author')
+      await page.getByPlaceholderText('write url here').fill('http://third.com')
+      await page.getByRole('button', { name: 'create' }).click()
+
+      const viewButtons = await page.getByRole('button', { name: 'view' }).all()
+      for (const button of viewButtons) {
+        await button.click()
+      }
+
+      const secondBlogLikeButton = page.locator('div').filter({ hasText: 'Second Blog Second Author' }).getByRole('button', { name: 'like' })
+      const thirdBlogLikeButton = page.locator('div').filter({ hasText: 'Third Blog Third Author' }).getByRole('button', { name: 'like' })
+
+      await secondBlogLikeButton.click()
+      await secondBlogLikeButton.click()
+
+      await thirdBlogLikeButton.click()
+      await thirdBlogLikeButton.click()
+      await thirdBlogLikeButton.click()
+      await thirdBlogLikeButton.click()
+
+      const blogs = await page.locator('.blog-details').all()
+      
+      const firstBlogText = await blogs[0].textContent()
+      const secondBlogText = await blogs[1].textContent()
+      const thirdBlogText = await blogs[2].textContent()
+
+      expect(firstBlogText).toContain('Third Blog')
+      expect(firstBlogText).toContain('likes 4')
+      
+      expect(secondBlogText).toContain('Second Blog')
+      expect(secondBlogText).toContain('likes 2')
+      
+      expect(thirdBlogText).toContain('First Blog')
+      expect(thirdBlogText).toContain('likes 0')
     })
   })
 })
