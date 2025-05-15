@@ -6,7 +6,7 @@
     "start": "node index.js",
     "dev": "cross-env NODE_ENV=development node --watch index.js",
     "test": "cross-env  NODE_ENV=test node --test",
-    "build": "npm rebuild bcrypt --build-from-source"
+    "build": "rm -rf node_modules/bcrypt && npm install"
   },
   "author": "Lucian Popa",
   "license": "ISC",
