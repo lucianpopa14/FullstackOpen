@@ -5,8 +5,7 @@
   "scripts": {
     "start": "node index.js",
     "dev": "cross-env NODE_ENV=development node --watch index.js",
-    "test": "cross-env  NODE_ENV=test node --test",
-    "build": "rm -rf node_modules/bcrypt && npm install"
+    "test": "cross-env  NODE_ENV=test node --test"
   },
   "author": "Lucian Popa",
   "license": "ISC",
