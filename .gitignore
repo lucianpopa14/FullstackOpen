@@ -1,3 +1,4 @@
 .env
 certificate-fullstack.png
 **/node_modules/
+**/package-lock.json

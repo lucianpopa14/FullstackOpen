@@ -12,7 +12,7 @@ My submissions for the [Full Stack Open](https://fullstackopen.com/en/) course b
 
 ## Live Apps
 - Phonebook App [here](https://fullstackopen-k6l1.onrender.com)
-- Bloglist App [WIP] 
+- Bloglist App [here](https://bloglist-duza.onrender.com/)
 
 ## Course Progress
 
