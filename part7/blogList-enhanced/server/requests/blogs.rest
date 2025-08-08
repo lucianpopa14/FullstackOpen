@@ -1,0 +1,15 @@
+### get all blogs
+GET http://localhost:3003/api/blogs
+
+### create a new blog
+POST http://localhost:3003/api/blogs
+Content-Type: application/json
+Authorization: Bearer <>
+
+{
+    "title": "Adventures in Programming",
+    "author": "John Smith",
+    "url": "http://techblog.com/adventures",
+    "likes": 15,
+    "userId": "680b2c82841dba98c5c023e7"
+}
