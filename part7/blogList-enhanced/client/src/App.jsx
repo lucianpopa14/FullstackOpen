@@ -1,4 +1,6 @@
 import { useState, useEffect } from "react";
+import { useSelector, useDispatch } from 'react-redux';
+import { setNotification, clearNotification } from './features/notification/notificationReducer';
 import Blog from "./components/Blog";
 import blogService from "./services/blogs";
 import loginService from "./services/login";
@@ -17,15 +19,14 @@ const App = () => {
     author: "",
     url: "",
   });
-  const [notification, setNotification] = useState({
-    message: null,
-    type: null,
-  });
+
+  const dispatch = useDispatch();
+  const notification = useSelector((state) => state.notification)
 
   const showNotification = (message, type) => {
-    setNotification({ message, type });
+    dispatch(setNotification({ message, type }));
     setTimeout(() => {
-      setNotification({ message: null, type: null });
+      dispatch(clearNotification());
     }, 5000);
   };
 
